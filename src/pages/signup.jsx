@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import z from 'zod'
@@ -23,6 +25,8 @@ import {
   FieldSet,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { toast } from '@/components/ui/toast'
+import { api } from '@/lib/axios'
 
 const signupSchema = z
   .object({
@@ -52,6 +56,19 @@ const signupSchema = z
   })
 
 const SignupPage = () => {
+  const [user, setUser] = useState()
+  const signupMutation = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: async (variables) => {
+      const response = await api.post('/users', {
+        first_name: variables.firstName,
+        last_name: variables.lastName,
+        email: variables.email,
+        password: variables.password,
+      })
+      return response.data
+    },
+  })
   const methods = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -65,7 +82,29 @@ const SignupPage = () => {
   })
 
   const onSubmit = (data) => {
-    console.log(data)
+    signupMutation.mutate(data, {
+      onSuccess: (createdUser) => {
+        const accessToken = createdUser.tokens.accessToken
+        const refreshToken = createdUser.tokens.refreshToken
+        setUser(createdUser)
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', refreshToken)
+        toast.add({
+          type: 'success',
+          description: 'Usuário cadastrado com sucesso!',
+        })
+      },
+      onError: () => {
+        toast.add({
+          type: 'error',
+          description: 'Erro ao criar conta. Tente novamente mais tarde.',
+        })
+      },
+    })
+  }
+
+  if (user) {
+    return <h1>Olá, {user.first_name}!</h1>
   }
 
   return (
