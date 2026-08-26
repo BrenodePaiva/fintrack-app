@@ -73,7 +73,7 @@ const LoginPage = () => {
                       id="email-form"
                       aria-invalid={fieldState.invalid}
                       placeholder="Digite seu e-mail"
-                      autoComplete="off"
+                      autoComplete="email"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -92,7 +92,7 @@ const LoginPage = () => {
                       {...field}
                       id="password-form"
                       aria-invalid={fieldState.invalid}
-                      autoComplete="off"
+                      autoComplete="current-password"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />

@@ -94,7 +94,7 @@ const SignupPage = () => {
                       id="first-name-form"
                       aria-invalid={fieldState.invalid}
                       placeholder="Digite seu nome"
-                      autoComplete="off"
+                      autoComplete="given-name"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -114,7 +114,7 @@ const SignupPage = () => {
                       id="last-name-form"
                       aria-invalid={fieldState.invalid}
                       placeholder="Digite seu sobrenome"
-                      autoComplete="off"
+                      autoComplete="family-name"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -134,7 +134,7 @@ const SignupPage = () => {
                       id="email-form"
                       aria-invalid={fieldState.invalid}
                       placeholder="Digite seu e-mail"
-                      autoComplete="off"
+                      autoComplete="email"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -153,7 +153,7 @@ const SignupPage = () => {
                       {...field}
                       id="password-form"
                       aria-invalid={fieldState.invalid}
-                      autoComplete="off"
+                      autoComplete="new-password"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -175,7 +175,7 @@ const SignupPage = () => {
                       id="password-confirmation-form"
                       aria-invalid={fieldState.invalid}
                       placeholder="Digite novamente sua senha"
-                      autoComplete="off"
+                      autoComplete="new-password"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
