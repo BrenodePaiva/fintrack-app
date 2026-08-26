@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import z from 'zod'
@@ -22,8 +21,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/toast'
-import { api } from '@/lib/axios'
+import { AuthContext } from '@/contexts/auth'
 
 const loginSchema = z.object({
   email: z
@@ -37,38 +35,7 @@ const loginSchema = z.object({
 })
 
 const LoginPage = () => {
-  const [user, setUser] = useState()
-  const loginMutation = useMutation({
-    mutationKey: ['login'],
-    mutationFn: async (variables) => {
-      const response = await api.post('/users/login', {
-        email: variables.email,
-        password: variables.password,
-      })
-      return response.data
-    },
-  })
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken')
-        const refreshToken = localStorage.getItem('refreshToken')
-        if (!accessToken && !refreshToken) return
-        const response = await api.get('/users/me', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-        setUser(response.data)
-      } catch (error) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-        console.log(error)
-      }
-    }
-    init()
-  }, [])
+  const { user, login } = useContext(AuthContext)
 
   const methods = useForm({
     resolver: zodResolver(loginSchema),
@@ -78,27 +45,7 @@ const LoginPage = () => {
     },
   })
 
-  const onSubmit = (data) => {
-    loginMutation.mutate(data, {
-      onSuccess: (logeedUser) => {
-        const accessToken = logeedUser.tokens.accessToken
-        const refreshToken = logeedUser.tokens.refreshToken
-        setUser(logeedUser)
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
-        toast.add({
-          type: 'success',
-          description: 'Login realizado com sucesso!',
-        })
-      },
-      onError: () => {
-        toast.add({
-          type: 'error',
-          description: 'Erro ao criar conta. Tente novamente mais tarde.',
-        })
-      },
-    })
-  }
+  const onSubmit = (data) => login(data)
 
   if (user) {
     return <h1>Olá, {user.first_name}!</h1>
