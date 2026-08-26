@@ -26,7 +26,7 @@ const removeTokens = () => {
 }
 
 export const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(null)
 
   const signupMutation = useMutation({
     mutationKey: ['signup'],
@@ -95,9 +95,9 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = (data) => {
     loginMutation.mutate(data, {
-      onSuccess: (logeedUser) => {
-        setUser(logeedUser)
-        setTokens(logeedUser.tokens)
+      onSuccess: (loggedUser) => {
+        setUser(loggedUser)
+        setTokens(loggedUser.tokens)
         toast.add({
           type: 'success',
           description: 'Login realizado com sucesso!',
