@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  Loader2Icon,
   PiggyBankIcon,
   PlusIcon,
   TrendingDownIcon,
   TrendingUpIcon,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 import z from 'zod'
@@ -19,11 +22,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useAuthContext } from '@/contexts/auth'
+import { TransactionService } from '@/services/transaction'
 
 import { Button } from './ui/button'
 import DatePicker from './ui/date-picker'
 import { Field, FieldError, FieldGroup, FieldLabel } from './ui/field'
 import { Input } from './ui/input'
+import { toast } from './ui/toast'
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { error: 'O nome é obrigatório' }),
@@ -32,11 +38,23 @@ const formSchema = z.object({
     .min(1, { error: 'O valor tem que ser maior que 0.' }),
   date: z.date({ error: 'A data é obrigatória.' }),
   type: z.enum(['EARNING', 'EXPENSE', 'INVESTMENT'], {
-    error: 'O tipo deve ser EARNING, EXPENSE or INVESTMENT.',
+    error: 'O tipo deve ser EARNING, EXPENSE ou INVESTMENT.',
   }),
 })
 
 const AddTransactionButton = () => {
+  const queryClient = useQueryClient()
+  const { user } = useAuthContext()
+  const { mutateAsync: createTransaction } = useMutation({
+    mutationKey: ['createTransaction'],
+    mutationFn: (input) => TransactionService.create(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['balance', user.id],
+      })
+    },
+  })
+  const [dialogIsOpen, setDialogIsOpen] = useState(false)
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,15 +66,26 @@ const AddTransactionButton = () => {
     shouldUnregister: true,
   })
 
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = async (data) => {
+    try {
+      await createTransaction(data)
+      toast.add({
+        type: 'success',
+        description: 'Trasação criada com sucesso!.',
+      })
+      setDialogIsOpen(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <>
-      <Dialog>
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
         <DialogTrigger render={<Button />}>
           <PlusIcon />
           Nova transaçãos
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="min-w-107">
           <DialogHeader>
             <DialogTitle>Adicionar Transação</DialogTitle>
             <DialogDescription>Insira as informações abaixo.</DialogDescription>
@@ -182,11 +211,24 @@ const AddTransactionButton = () => {
               />
             </FieldGroup>
             <DialogFooter className="grid grid-cols-2 gap-4">
-              <DialogClose render={<Button type="reset" variant="secondary" />}>
+              <DialogClose
+                render={
+                  <Button
+                    type="reset"
+                    variant="secondary"
+                    disabled={form.formState.isSubmitting}
+                  />
+                }
+              >
                 Cancelar
               </DialogClose>
 
-              <Button type="submit">Adicionar</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2Icon className="animate-spin" />
+                )}
+                Adicionar
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
