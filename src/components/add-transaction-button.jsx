@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Loader2Icon,
   PiggyBankIcon,
@@ -7,11 +6,9 @@ import {
   TrendingUpIcon,
 } from 'lucide-react'
 import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
-import z from 'zod'
 
-import { useCreateTransaction } from '@/api/hooks/transaction'
 import {
   Dialog,
   DialogClose,
@@ -22,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useCreateTransactionForm } from '@/forms/hooks/transaction'
 
 import { Button } from './ui/button'
 import DatePicker from './ui/date-picker'
@@ -29,43 +27,24 @@ import { Field, FieldError, FieldGroup, FieldLabel } from './ui/field'
 import { Input } from './ui/input'
 import { toast } from './ui/toast'
 
-const formSchema = z.object({
-  name: z.string().trim().min(1, { error: 'O nome é obrigatório' }),
-  amount: z
-    .number({ error: 'O valor é obrigatório' })
-    .min(1, { error: 'O valor tem que ser maior que 0.' }),
-  date: z.date({ error: 'A data é obrigatória.' }),
-  type: z.enum(['EARNING', 'EXPENSE', 'INVESTMENT'], {
-    error: 'O tipo deve ser EARNING, EXPENSE ou INVESTMENT.',
-  }),
-})
-
 const AddTransactionButton = () => {
-  const { mutateAsync: createTransaction } = useCreateTransaction()
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      amount: 50,
-      date: new Date(),
-      type: 'EARNING',
-    },
-    shouldUnregister: true,
-  })
-
-  const onSubmit = async (data) => {
-    try {
-      await createTransaction(data)
+  const { form, onSubmit } = useCreateTransactionForm({
+    onSuccess: () => {
       toast.add({
         type: 'success',
-        description: 'Trasação criada com sucesso!.',
+        description: 'Transação criada com sucesso!.',
       })
       setDialogIsOpen(false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+    },
+    onError: () => {
+      toast.add({
+        type: 'error',
+        description: 'Erro ao criar transação.',
+      })
+    },
+  })
+
   return (
     <>
       <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
