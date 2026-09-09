@@ -1,7 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { Link, Navigate } from 'react-router'
-import z from 'zod'
 
 import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
@@ -24,48 +22,12 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useAuthContext } from '@/contexts/auth'
-
-const signupSchema = z
-  .object({
-    firstName: z.string().trim().min(1, {
-      error: 'O campo nome é obrigatório.',
-    }),
-    lastName: z.string().trim().min(1, {
-      error: 'O campo sobrenome é obrigatório.',
-    }),
-    email: z
-      .email({ error: 'O e-mail é invalido.' })
-      .trim()
-      .min(1, { error: 'O campo e-mail é obrigatório.' }),
-    password: z
-      .string()
-      .trim()
-      .min(6, { error: 'O campo senha deve ter no mínimo 6 caracteres.' }),
-    passwordConfirmation: z.string().trim(),
-    // terms precisa ser 'true'
-    terms: z.boolean().refine((value) => value === true, {
-      error: 'Você precisa aceitar os termos de uso.',
-    }),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    error: 'As senhas não coincidem.',
-    path: ['passwordConfirmation'],
-  })
+import { useSignupForm } from '@/forms/hooks/user'
 
 const SignupPage = () => {
   const { user, signup, isInitializing } = useAuthContext()
 
-  const methods = useForm({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-      terms: false,
-    },
-  })
+  const { form } = useSignupForm()
 
   const onSubmit = (data) => signup(data)
 
@@ -75,7 +37,7 @@ const SignupPage = () => {
 
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center gap-3">
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="w-125">
           <CardHeader>
             <CardTitle>Crie a sua conta</CardTitle>
@@ -85,7 +47,7 @@ const SignupPage = () => {
             <FieldGroup className="w-full">
               <Controller
                 name="firstName"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="first-name-form">Nome</FieldLabel>
@@ -105,7 +67,7 @@ const SignupPage = () => {
 
               <Controller
                 name="lastName"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="last-name-form">Sobrenome</FieldLabel>
@@ -125,7 +87,7 @@ const SignupPage = () => {
 
               <Controller
                 name="email"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="email-form">E-mail</FieldLabel>
@@ -145,7 +107,7 @@ const SignupPage = () => {
 
               <Controller
                 name="password"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="password-form">Senha</FieldLabel>
@@ -164,7 +126,7 @@ const SignupPage = () => {
 
               <Controller
                 name="passwordConfirmation"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="password-confirmation-form">
@@ -186,7 +148,7 @@ const SignupPage = () => {
 
               <Controller
                 name="terms"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <div>
                     <FieldSet data-invalid={fieldState.invalid}>
