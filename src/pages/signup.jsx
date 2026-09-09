@@ -1,3 +1,4 @@
+import { Loader2Icon } from 'lucide-react'
 import { Controller } from 'react-hook-form'
 import { Link, Navigate } from 'react-router'
 
@@ -185,7 +186,14 @@ const SignupPage = () => {
             </FieldGroup>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Criar conta
             </Button>
           </CardFooter>
