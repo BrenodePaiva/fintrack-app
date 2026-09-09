@@ -1,7 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Loader2Icon } from 'lucide-react'
+import { Controller } from 'react-hook-form'
 import { Link, Navigate } from 'react-router'
-import z from 'zod'
 
 import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
@@ -21,28 +20,12 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useAuthContext } from '@/contexts/auth'
-
-const loginSchema = z.object({
-  email: z
-    .email({ error: 'O e-mail é inválido.' })
-    .trim()
-    .min(1, { error: 'O campo e-mail é obrigatório.' }),
-  password: z
-    .string()
-    .trim()
-    .min(6, { error: 'O campo senha deve ter no mínimo 6 caracteres.' }),
-})
+import { useLoginForm } from '@/forms/hooks/user'
 
 const LoginPage = () => {
   const { user, login, isInitializing } = useAuthContext()
 
-  const methods = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  })
+  const { form } = useLoginForm()
 
   const onSubmit = (data) => login(data)
 
@@ -52,7 +35,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center gap-3">
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="w-125">
           <CardHeader>
             <CardTitle>Faça login</CardTitle>
@@ -64,7 +47,7 @@ const LoginPage = () => {
             <FieldGroup className="w-full">
               <Controller
                 name="email"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="email-form">E-mail</FieldLabel>
@@ -84,7 +67,7 @@ const LoginPage = () => {
 
               <Controller
                 name="password"
-                control={methods.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="password-form">Senha</FieldLabel>
@@ -103,7 +86,14 @@ const LoginPage = () => {
             </FieldGroup>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Entrar
             </Button>
           </CardFooter>
