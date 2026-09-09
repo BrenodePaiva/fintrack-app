@@ -77,6 +77,7 @@ export const UserService = {
     const response = await protectedApi.get(
       `/users/me/balance?${queryParams.toString()}`
     )
+    console.log(queryParams)
     return response.data
   },
 }
