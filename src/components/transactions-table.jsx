@@ -12,6 +12,7 @@ import { formatCurrency } from '@/helpers/currency'
 import TransactionTypeBadge from './transaction-type-badge'
 import { Button } from './ui/button'
 import { DataTable } from './ui/data-table'
+import { ScrollArea } from './ui/scroll-area'
 
 const columnHelper = createColumnHelper()
 
@@ -58,7 +59,14 @@ const TransactionsTable = () => {
   const { data: transactions } = useGetTransactions({ from, to })
 
   if (!transactions) return null
-  return <DataTable columns={columns} data={transactions} />
+  return (
+    <>
+      <h2 className="text-2xl font-bold">Transações</h2>
+      <ScrollArea className="h-125 max-h-125 rounded-md border">
+        <DataTable columns={columns} data={transactions} />
+      </ScrollArea>
+    </>
+  )
 }
 
 export default TransactionsTable
