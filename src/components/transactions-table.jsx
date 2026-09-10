@@ -3,12 +3,14 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { ExternalLinkIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 
 import { useGetTransactions } from '@/api/hooks/transaction'
 import { formatCurrency } from '@/helpers/currency'
 
 import TransactionTypeBadge from './transaction-type-badge'
+import { Button } from './ui/button'
 import { DataTable } from './ui/data-table'
 
 const columnHelper = createColumnHelper()
@@ -39,6 +41,13 @@ export const columns = columnHelper.columns([
   }),
   columnHelper.accessor('actions', {
     header: 'Ações',
+    cell: () => {
+      return (
+        <Button variant="ghost" size="icon">
+          <ExternalLinkIcon className="text-muted-foreground" />
+        </Button>
+      )
+    },
   }),
 ])
 
