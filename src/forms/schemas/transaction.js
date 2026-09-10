@@ -10,3 +10,7 @@ export const createTransactionFormSchema = z.object({
     error: 'O tipo deve ser EARNING, EXPENSE ou INVESTMENT.',
   }),
 })
+
+export const editTransactionFormSchema = createTransactionFormSchema.extend({
+  id: z.uuid(),
+})
