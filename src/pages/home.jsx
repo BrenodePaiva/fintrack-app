@@ -2,6 +2,7 @@ import { Navigate } from 'react-router'
 
 import AddTransactionButton from '@/components/add-transaction-button'
 import Balance from '@/components/balance'
+import BalanceChart from '@/components/balance-chart'
 import DateSelection from '@/components/date-selection'
 import Header from '@/components/header'
 import TransactionsTable from '@/components/transactions-table'
@@ -26,8 +27,9 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-[2fr,1fr]">
+        <div className="grid grid-cols-[1fr_2fr] gap-6">
           <Balance />
+          <BalanceChart />
         </div>
 
         <TransactionsTable />
