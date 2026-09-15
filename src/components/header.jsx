@@ -20,7 +20,7 @@ const Header = () => {
   const { user, signOut } = useAuthContext()
   return (
     <Card>
-      <CardContent className="flex items-center justify-between px-8 py-4">
+      <CardContent className="flex items-center justify-between px-4 py-4 md:px-8">
         <div>
           <img src={logo} alt="Fintrack" />
         </div>

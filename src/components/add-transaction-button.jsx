@@ -52,7 +52,7 @@ const AddTransactionButton = () => {
           <PlusIcon />
           Nova transaçãos
         </DialogTrigger>
-        <DialogContent className="min-w-107">
+        <DialogContent className="max-w-[90vw] min-w-[320px] md:min-w-107">
           <DialogHeader>
             <DialogTitle>Adicionar Transação</DialogTitle>
             <DialogDescription>Insira as informações abaixo.</DialogDescription>
@@ -140,7 +140,7 @@ const AddTransactionButton = () => {
                     <FieldLabel htmlFor="form-transaction-type">
                       Tipo
                     </FieldLabel>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                       <Button
                         variant={
                           field.value === 'EARNING' ? 'secondary' : 'outline'

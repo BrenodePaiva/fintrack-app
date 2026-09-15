@@ -17,7 +17,7 @@ const Balance = () => {
   const { data } = useGetUserBalance({ from, to })
 
   return (
-    <div className="grid grid-cols-2 grid-rows-2 gap-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:grid-rows-2">
       <BalanceItem
         label="Saldo"
         amount={data?.balance}

@@ -19,15 +19,15 @@ const HomePage = () => {
     <>
       <Header />
       <div className="space-y-6 p-8">
-        <div className="flex items-center justify-between">
+        <div className="inline-table items-center justify-between sm:flex">
           <h2 className="text-2xl font-bold">Dashboard</h2>
-          <div className="flex items-center gap-2">
+          <div className="mt-2.5 flex flex-col items-start gap-2 sm:mt-0 sm:flex-row sm:items-center">
             <DateSelection />
             <AddTransactionButton />
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_2fr] gap-6">
+        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-[1fr_490px]">
           <Balance />
           <BalanceChart />
         </div>

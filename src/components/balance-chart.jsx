@@ -1,3 +1,4 @@
+import { PiggyBankIcon, TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 import { Label, Pie, PieChart } from 'recharts'
 
@@ -40,19 +41,22 @@ const BalanceChart = () => {
       key: 'ganhos',
       label: chartConfig.ganhos.label,
       value: raw.ganhos,
-      color: 'var(--primary-green)',
+      icon: TrendingUpIcon,
+      iconClassName: 'text-primary-green',
     },
     {
       key: 'gastos',
       label: chartConfig.gastos.label,
       value: raw.gastos,
-      color: 'var(--primary-red)',
+      icon: TrendingDownIcon,
+      iconClassName: 'text-primary-red',
     },
     {
       key: 'investimentos',
       label: chartConfig.investimentos.label,
       value: raw.investimentos,
-      color: 'var(--primary-blue)',
+      icon: PiggyBankIcon,
+      iconClassName: 'text-primary-blue',
     },
   ]
 
@@ -61,11 +65,8 @@ const BalanceChart = () => {
       <CardHeader>
         <CardTitle>Distribuição</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col justify-between gap-4">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[240px]"
-        >
+      <CardContent className="flex flex-1 flex-col items-center gap-4 sm:flex-row">
+        <ChartContainer config={chartConfig} className="h-50 w-full max-w-60">
           <PieChart>
             <ChartTooltip
               cursor={false}
@@ -73,7 +74,24 @@ const BalanceChart = () => {
                 <ChartTooltipContent
                   hideLabel
                   nameKey="category"
-                  formatter={(value) => `${value}%`}
+                  formatter={(value, name, item) => (
+                    <div className="flex w-full items-center justify-between gap-3">
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-xs"
+                          style={{
+                            backgroundColor: item.payload?.fill ?? item.color,
+                          }}
+                        />
+                        <span className="text-muted-foreground">
+                          {chartConfig[name]?.label ?? name}
+                        </span>
+                      </span>
+                      <span className="font-mono font-medium tabular-nums">
+                        {value}%
+                      </span>
+                    </div>
+                  )}
                 />
               }
             />
@@ -81,10 +99,10 @@ const BalanceChart = () => {
               data={chartData}
               dataKey="value"
               nameKey="category"
-              innerRadius={60}
+              innerRadius={78}
               outerRadius={92}
               paddingAngle={2.5}
-              cornerRadius={5}
+              cornerRadius={12}
               stroke="none"
             >
               <Label
@@ -120,17 +138,14 @@ const BalanceChart = () => {
           </PieChart>
         </ChartContainer>
 
-        <div className="flex flex-col gap-2 border-t pt-4">
+        <div className="flex flex-wrap justify-center gap-[15px_40px] pt-5 sm:flex-col sm:gap-2">
           {legend.map((item) => (
             <div
               key={item.key}
-              className="flex items-center justify-between text-sm"
+              className="flex items-center justify-between text-base"
             >
-              <span className="flex items-center gap-2">
-                <span
-                  className="h-2.5 w-2.5 rounded-[2px]"
-                  style={{ backgroundColor: item.color }}
-                />
+              <span className="mr-2.5 flex items-center gap-2">
+                <item.icon size={20} className={item.iconClassName} />
                 <span className="text-muted-foreground">{item.label}</span>
               </span>
               <span className="font-mono tabular-nums">{item.value}%</span>
