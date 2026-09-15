@@ -3,6 +3,7 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 
 import { useGetTransactions } from '@/api/hooks/transaction'
@@ -10,6 +11,7 @@ import { formatCurrency } from '@/helpers/currency'
 
 import EditTransactionButton from './edit-transaction-button'
 import TransactionTypeBadge from './transaction-type-badge'
+import { Button } from './ui/button'
 import { DataTable } from './ui/data-table'
 import { ScrollArea } from './ui/scroll-area'
 
@@ -26,7 +28,22 @@ export const columns = columnHelper.columns([
     },
   }),
   columnHelper.accessor('date', {
-    header: 'Data',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={column.getToggleSortingHandler()}
+      >
+        Data
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon />
+        ) : (
+          <ArrowUpDownIcon />
+        )}
+      </Button>
+    ),
     cell: ({ row: { original: transaction } }) => {
       return format(
         parseISO(transaction.date.slice(0, 10)),
@@ -62,7 +79,11 @@ const TransactionsTable = () => {
     <>
       <h2 className="text-2xl font-bold">Transações</h2>
       <ScrollArea className="h-125 max-h-125 rounded-md border">
-        <DataTable columns={columns} data={transactions} />
+        <DataTable
+          columns={columns}
+          data={transactions}
+          initialState={{ sorting: [{ id: 'date', desc: true }] }}
+        />
       </ScrollArea>
     </>
   )

@@ -13,11 +13,12 @@ import {
 
 import { features } from './data-table-features'
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data, initialState }) {
   const table = useTable({
     features,
     data,
     columns,
+    initialState,
   })
 
   return (
