@@ -12,7 +12,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 
@@ -48,19 +47,13 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     size="small"
-                    className="w-full justify-start"
+                    className="w-full justify-start gap-1"
                     onClick={signOut}
                   >
                     <LogOutIcon />
                     Sair
                   </Button>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
