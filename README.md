@@ -15,8 +15,6 @@ Frontend de controle financeiro pessoal em React + Vite. Permite criar conta, en
 ![Login](docs/screenshots/login.png)
 ![Transações](docs/screenshots/transactions.png)
 
-> Pasta sugerida: `docs/screenshots/dashboard.png`, `login.png` e `transactions.png`.
-
 ## Funcionalidades
 
 - Cadastro, login e sessão com refresh automático de token.
@@ -53,7 +51,7 @@ npm install
 npm run dev
 ```
 
-Acesse `http://localhost:5173` e crie sua conta em `/signup`.
+Acesse `https://fintrack.brenofullstack.com` e crie sua conta em `/signup`.
 
 | Comando           | Descrição                                   |
 | ----------------- | ------------------------------------------- |
