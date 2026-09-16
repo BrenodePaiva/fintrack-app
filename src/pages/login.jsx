@@ -36,7 +36,7 @@ const LoginPage = () => {
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center gap-3">
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card className="w-125">
+        <Card className="w-full sm:w-125">
           <CardHeader>
             <CardTitle>Faça login</CardTitle>
             <CardDescription>
