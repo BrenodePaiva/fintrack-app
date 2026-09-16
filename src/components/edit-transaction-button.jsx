@@ -11,6 +11,7 @@ import { NumericFormat } from 'react-number-format'
 
 import { useEditTransactionForm } from '@/forms/hooks/transaction'
 
+import DeleteTransactionButton from './delete-transaction-button'
 import { Button } from './ui/button'
 import DatePicker from './ui/date-picker'
 import { Field, FieldError, FieldGroup, FieldLabel } from './ui/field'
@@ -176,6 +177,8 @@ const EditTransactionButton = ({ transaction }) => {
                 )}
               />
             </FieldGroup>
+
+            <DeleteTransactionButton transactionId={transaction.id} />
           </div>
           <SheetFooter className="grid grid-cols-2 gap-4">
             <SheetClose
