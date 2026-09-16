@@ -1,16 +1,17 @@
 import axios from 'axios'
 
+import { API_URL } from '@/constants/api'
 import {
   LOCAL_STORAGE_ACCESS_TOKEN_KEY,
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
 } from '@/constants/local-storage,'
 
 export const publicApi = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: API_URL,
 })
 
 export const protectedApi = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: API_URL,
 })
 
 protectedApi.interceptors.request.use((request) => {
